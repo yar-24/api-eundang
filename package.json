@@ -4,7 +4,8 @@
   "description": "rest aoi eUndang",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "heroku-postbuild": "cd client && yarn && yarn build"
   },
   "author": "akhyar ramadhan",
   "license": "ISC",
