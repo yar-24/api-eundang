@@ -50,6 +50,9 @@ app.use(errorHandler);
 
 //----------------deployment-----------------
 
+__dirname = path.resolve()
+
+if(process.env.NODE_ENV === 'production')
 app.use(express.static(path.join("/client/build")));
 
 app.get('*', (req, res) => {
