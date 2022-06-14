@@ -1,7 +1,7 @@
 const coreApi = require("../middleware/order");
 const asyncHandler = require("express-async-handler");
 const Order = require("../models/order");
-const midtransClient = require('midtrans-client');
+// const midtransClient = require('midtrans-client');
 
 // let coreApi = new midtransClient.CoreApi({
 //     isProduction : false,
@@ -9,29 +9,29 @@ const midtransClient = require('midtrans-client');
 //     clientKey :"SB-Mid-client-QM3YEJ7SdqO0rhp3",
 // });
 
-
 const getOrder = asyncHandler((req, res, next) => {
-  Order.find()
+  Order.findAll()
     .then((data) => {
       var tampilData = data.map((item) => {
         return {
           id: item.id,
+          tiket_id: item.tiket_id,
           nama: item.nama,
           response_midtrans: JSON.parse(item.response_midtrans),
           createdAt: item.createdAt,
-          updatedAt: item.updateddAt,
-        }
-      })
+          updatedAt: item.updatedAt,
+        };
+      });
       res.json({
         status: true,
-        message: "Berhasil Order",
+        pesan: "Berhasil Tampil",
         data: tampilData,
       });
     })
     .catch((err) => {
       res.json({
         status: false,
-        message: "Gagal Order" + err.message,
+        pesan: "Gagal tampil: " + err.message,
         data: [],
       });
     });
@@ -41,25 +41,24 @@ const postOrder = asyncHandler((req, res, next) => {
   coreApi
     .charge(req.body)
     .then((chargeResponse) => {
-      const dataOrder = {
+      var dataOrder = {
         id: chargeResponse.order_id,
+        tiket_id: req.body.tiket_id,
         nama: req.body.nama,
         response_midtrans: JSON.stringify(chargeResponse),
-        // tiket_id: req.body.tiket_id,
       };
-
       Order.create(dataOrder)
         .then((data) => {
           res.json({
             status: true,
-            message: "Berhasil Order",
+            pesan: "Berhasil Order",
             data: data,
           });
         })
         .catch((err) => {
           res.json({
             status: false,
-            message: "Gagal Order" + err.message,
+            pesan: "Gagal Order: " + err.message,
             data: [],
           });
         });
@@ -67,7 +66,7 @@ const postOrder = asyncHandler((req, res, next) => {
     .catch((e) => {
       res.json({
         status: false,
-        message: "Gagal Order" + e.message,
+        pesan: "Gagal order: " + e.message,
         data: [],
       });
     });
@@ -77,7 +76,7 @@ const notifikasiOrder = asyncHandler((req, res, next) => {
   coreApi.transaction.notification(req.body).then((statusResponse) => {
     let orderId = statusResponse.order_id;
     let responseMidtrans = JSON.stringify(statusResponse);
-    Order.updateOne(
+    Order.update(
       { response_midtrans: responseMidtrans },
       {
         where: { id: orderId },
@@ -101,32 +100,29 @@ const notifikasiOrder = asyncHandler((req, res, next) => {
 });
 
 const getOrderOffline = asyncHandler((req, res, next) => {
-  coreApi.transaction
-    .status(req.params.order_id)
-
-    .then((statusResponse) => {
-      let responseMidtrans = JSON.stringify(statusResponse);
-      Order.updateOne(
-        { response_midtrans: responseMidtrans },
-        {
-          where: { id: req.params.order_id },
-        }
-      )
-        .then(() => {
-          res.json({
-            status: true,
-            pesan: "Berhasil cek status",
-            data: statusResponse,
-          });
-        })
-        .catch((err) => {
-          res.status(500).json({
-            status: false,
-            pesan: "Gagal cek status: " + err.message,
-            data: [],
-          });
+  coreApi.transaction.status(req.params.order_id).then((statusResponse) => {
+    let responseMidtrans = JSON.stringify(statusResponse);
+    Order.update(
+      { response_midtrans: responseMidtrans },
+      {
+        where: { id: req.params.order_id },
+      }
+    )
+      .then(() => {
+        res.json({
+          status: true,
+          pesan: "Berhasil cek status",
+          data: statusResponse,
         });
-    });
+      })
+      .catch((err) => {
+        res.json({
+          status: false,
+          pesan: "Gagal cek status: " + err.message,
+          data: [],
+        });
+      });
+  });
 });
 
 module.exports = {

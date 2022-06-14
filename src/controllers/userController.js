@@ -81,7 +81,7 @@ const loginUser = asyncHandler(async (req, res) => {
 // @access  Private
 const updateUser = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  const { name, email, password } = req.body;
+  const { name, email, password, token } = req.body;
 
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
