@@ -2,17 +2,9 @@ const mongoose = require("mongoose");
 
 const orderSchema = mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
     id: {
       type: String,
       primaryKey: true,
-    },
-    tiket_id: {
-      type: Number,
-      allowNull: false,
     },
     nama: {
       type: String,

@@ -11,12 +11,21 @@ const midtransClient = require('midtrans-client');
 
 
 const getOrder = asyncHandler((req, res, next) => {
-  Order.findAll()
+  Order.find()
     .then((data) => {
+      var tampilData = data.map((item) => {
+        return {
+          id: item.id,
+          nama: item.nama,
+          response_midtrans: JSON.parse(item.response_midtrans),
+          createdAt: item.createdAt,
+          updatedAt: item.updateddAt,
+        }
+      })
       res.json({
         status: true,
         message: "Berhasil Order",
-        data: data,
+        data: tampilData,
       });
     })
     .catch((err) => {
@@ -34,9 +43,9 @@ const postOrder = asyncHandler((req, res, next) => {
     .then((chargeResponse) => {
       const dataOrder = {
         id: chargeResponse.order_id,
-        tiket_id: req.body.tiket_id,
         nama: req.body.nama,
         response_midtrans: JSON.stringify(chargeResponse),
+        // tiket_id: req.body.tiket_id,
       };
 
       Order.create(dataOrder)
