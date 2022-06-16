@@ -34,7 +34,7 @@ app.use("/api/goals", goalRouter);
 app.use("/api/users", userRouter);
 // app.use("/user/post", userPostRoute);
 // app.use("/auth", authPassport)
-app.use("/order", orderRouter)
+app.use("/api/order", orderRouter)
 app.use(
   cookieSession({
     name: "session",

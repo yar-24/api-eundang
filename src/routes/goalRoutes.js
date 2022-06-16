@@ -136,7 +136,7 @@ router.delete(
 );
 
 //get
-router.route("/:id").get(protect, getGoalById);
+router.route("/:id").get(getGoalById);
 
 //postKoment
 router.post("/comment/:id", protect, [comments.array("nameComment", "isiComment")], postComment)
