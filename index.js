@@ -58,7 +58,7 @@ app.get("/*", (req, res) => {
 });
 
 app.use(express.static(path.join(__dirname, "admin")));
-app.get("/*", (req, res) => {
+app.get("/admin", (req, res) => {
   res.sendFile(path.join(__dirname, "admin", "index.html"));
 });
 
