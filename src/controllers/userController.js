@@ -27,7 +27,7 @@ const registerUser = asyncHandler(async (req, res) => {
   // Hash password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
-  const picture = "https://res.cloudinary.com/eundangdotcom/image/upload/v1654682578/UserPic_w58kfb.png"
+  const picture = "https://i.ibb.co/MBtjqXQ/no-avatar.gif"
   const idPicProfile = "UserPic_w58kfb"
 
   // Create user
