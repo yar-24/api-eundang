@@ -38,6 +38,7 @@ router.post(
     // AKAD
     body("tglAkad"),
     body("waktuAkad"),
+    body("waktuBagianAkad"),
     body("alamatAkad"),
     body("linkAlmtAkad"),
     // RESEPSI
@@ -90,6 +91,7 @@ router.put(
     // AKAD
     body("tglAkad"),
     body("waktuAkad"),
+    body("waktuBagianAkad"),
     body("alamatAkad"),
     body("linkAlmtAkad"),
     // RESEPSI
@@ -139,6 +141,6 @@ router.delete(
 router.route("/:id").get(getGoalById);
 
 //postKoment
-router.post("/comment/:id", protect, [comments.array("nameComment", "isiComment")], postComment)
+router.post("/comment/:id", [comments.array("nameComment", "isiComment")], postComment)
 
 module.exports = router;

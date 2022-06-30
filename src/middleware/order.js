@@ -6,4 +6,10 @@ let coreApi = new midtransClient.CoreApi({
     clientKey : process.env.ORDER_CLIENT_KEY,
 });
 
+// let snap = new midtransClient.Snap({
+//     isProduction : false,
+//     serverKey : 'YOUR_SERVER_KEY',
+//     clientKey : 'YOUR_CLIENT_KEY'
+// });
+
 module.exports = coreApi

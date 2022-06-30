@@ -45,6 +45,7 @@ const goalSchema = mongoose.Schema(
     // WAKTU DAN TEMPAT AKAD
     tglAkad: { type: String, required: [true, "Please add a tglAkad"] },
     waktuAkad: { type: String, required: [true, "Please add a waktuAkad"] },
+    waktuBagianAkad: { type: String, required: [true, "Please add a waktuBagianAkad"] },
     alamatAkad: { type: String, required: [true, "Please add a alamatAkad"] },
     linkAlmtAkad: {
       type: String,
@@ -57,6 +58,7 @@ const goalSchema = mongoose.Schema(
       type: String,
       required: [true, "Please add a waktuResepsi"],
     },
+    waktuBagianResepsi: { type: String, required: [true, "Please add a waktuBagianResepsi"] },
     alamatResepsi: {
       type: String,
       required: [true, "Please add a alamatResepsi"],

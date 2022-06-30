@@ -66,11 +66,14 @@ const goalPost = asyncHandler(async (req, res) => {
         //AKAD
         tglAkad: req.body.tglAkad,
         waktuAkad: req.body.waktuAkad,
+        waktuBagianAkad: req.body.waktuBagianAkad,
         alamatAkad: req.body.alamatAkad,
         linkAlmtAkad: req.body.linkAlmtAkad,
+
         //RESEPSI
         tglResepsi: req.body.tglResepsi,
         waktuResepsi: req.body.waktuResepsi,
+        waktuBagianResepsi: req.body.waktuBagianResepsi,
         alamatResepsi: req.body.alamatResepsi,
         linkAlmtResepsi: req.body.linkAlmtResepsi,
 
@@ -164,11 +167,14 @@ const goalUpdate = asyncHandler(async (req, res) => {
       //AKAD
       tglAkad: req.body.tglAkad || goal.tglAkad,
       waktuAkad: req.body.waktuAkad || goal.waktuAkad,
+      waktuBagianAkad: req.body.waktuBagianAkad || goal.waktuBagianAkad,
       alamatAkad: req.body.alamatAkad || goal.alamatAkad,
       linkAlmtAkad: req.body.linkAlmtAkad || goal.linkAlmtAkad,
+
       //RESEPSI
       tglResepsi: req.body.tglResepsi || goal.tglResepsi,
       waktuResepsi: req.body.waktuResepsi || goal.waktuResepsi,
+      waktuBagianResepsi: req.body.waktuBagianResepsi || goal.waktuBagianResepsi,
       alamatResepsi: req.body.alamatResepsi || goal.alamatResepsi,
       linkAlmtResepsi: req.body.linkAlmtResepsi || goal.linkAlmtResepsi,
 

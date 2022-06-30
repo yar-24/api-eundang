@@ -2,23 +2,21 @@ const coreApi = require("../middleware/order");
 const asyncHandler = require("express-async-handler");
 const Pay = require("../models/pay");
 
-const getOrders = asyncHandler((req, res, next) => {
-  Pay.find()
+const getOrders = asyncHandler(async(req, res, next) => {
+  Pay.find({ user: req.user.id })
     .then((data) => {
       var tampilData = data.map((item) => {
         return {
+          _id: item._id,
           id: item.id,
+          tiket_id: item.tiket_id,
           nama: item.nama,
           response_midtrans: JSON.parse(item.response_midtrans),
           createdAt: item.createdAt,
           updatedAt: item.updatedAt,
         };
       });
-      res.json({
-        status: true,
-        pesan: "Berhasil Tampil",
-        data: tampilData,
-      });
+      res.json(tampilData);
     })
     .catch((err) => {
       res.json({
@@ -29,11 +27,63 @@ const getOrders = asyncHandler((req, res, next) => {
     });
 });
 
+const getOrdersByAdmin = asyncHandler(async(req, res, next) => {
+ 
+  Pay.find()
+    .then((data) => {
+      var tampilData = data.map((item) => {
+        return {
+          _id: item._id,
+          id: item.id,
+          tiket_id: item.tiket_id,
+          nama: item.nama,
+          response_midtrans: JSON.parse(item.response_midtrans),
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+        };
+      });
+      res.json(tampilData);
+    })
+    .catch((err) => {
+      res.json({
+        status: false,
+        pesan: "Gagal tampil: " + err.message,
+        data: [],
+      });
+    });
+});
+
+const deleteOrder = asyncHandler((req, res, next) => {
+  const id = req.params.order_id;
+
+  Pay.findById(id)
+    .then((data) => { 
+      if (!data) {
+        const err = new Error("Undangan tidak ditemukan");
+        err.errorStatus = 404;
+        throw err;
+      }
+      res.status(200).json({
+        message: "Order Berhasil dihapus",
+        data: data,
+      });
+      return Pay.findByIdAndRemove(id)
+    })
+    .catch((err) => {
+      res.json({
+        status: false,
+        pesan: err.message,
+        data: [],
+      });
+    });
+})
+
 const postOrder = asyncHandler((req, res, next) => {
   coreApi
     .charge(req.body)
     .then((chargeResponse) => {
       var dataOrder = {
+        user: req.user.id,
         id: chargeResponse.order_id,
         nama: req.body.nama,
         response_midtrans: JSON.stringify(chargeResponse),
@@ -119,6 +169,8 @@ const getOrder = asyncHandler((req, res, next) => {
 module.exports = {
   getOrder,
   getOrders,
+  getOrdersByAdmin,
   postOrder,
   notificationOrder,
+  deleteOrder,
 };

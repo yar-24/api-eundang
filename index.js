@@ -10,6 +10,7 @@ const path = require("path")
 const userRouter = require("./src/routes/userRoutes")
 const goalRouter = require("./src/routes/goalRoutes")
 const orderRouter = require("./src/routes/orderRoutes")
+const snapRouter = require("./src/routes/snapRoutes")
 // const passportSetup = require("./src/middleware/passport")
 // const authPassport = require("./src/routes/authPassport")
 const { errorHandler } = require("./src/middleware/errorMiddleware");
@@ -35,6 +36,7 @@ app.use("/api/users", userRouter);
 // app.use("/user/post", userPostRoute);
 // app.use("/auth", authPassport)
 app.use("/api/order", orderRouter)
+app.use("/api/snap", snapRouter)
 app.use(
   cookieSession({
     name: "session",
@@ -50,9 +52,14 @@ app.use(errorHandler);
 
 //----------------deployment-----------------
 
-app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static(path.join(__dirname, "client")));
 app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
+  res.sendFile(path.join(__dirname, "client", "index.html"));
+});
+
+app.use(express.static(path.join(__dirname, "admin")));
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "admin", "index.html"));
 });
 
 
