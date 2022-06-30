@@ -52,10 +52,10 @@ app.use(errorHandler);
 
 //----------------deployment-----------------
 
-app.use(express.static(path.join(__dirname, "client",)));
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "index.html"));
-});
+// app.use(express.static(path.join(__dirname, "client",)));
+// app.get("/*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "client", "index.html"));
+// });
 
 app.use(express.static(path.join(__dirname, "admin")));
 app.get("/admin", (req, res) => {
