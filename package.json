@@ -1,7 +1,7 @@
 {
   "name": "api2",
   "version": "1.0.0",
-  "description": "rest aoi eUndang",
+  "description": "rest api eUndang",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
