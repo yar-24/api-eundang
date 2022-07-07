@@ -2,8 +2,55 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
-
 const cloudinary = require("../middleware/cloudinary");
+const nodemailer = require("nodemailer");
+const randomstring = require("randomstring");
+
+const sendResetPasswordMail = async (name, email, token) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      requireTLS: true,
+      auth: {
+        user: process.env.NAME_EMAIL,
+        pass: process.env.PASS_EMAIL,
+      },
+    });
+
+    const mailOption = {
+      from: process.env.NAME_EMAIL,
+      to: email,
+      subject: "For Reset Password",
+      html:
+        "<p> hai " +
+        name +
+        ', Please copy or click the <a href="http://localhost:3000/resetPassword?token=' +
+        token +
+        '">link</a> and reset your password</p> ',
+    };
+    transporter.sendMail(mailOption, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Mail has been sent", info.response);
+      }
+    });
+  } catch (error) {
+    res.status(400).send({ success: false, message: error.message });
+  }
+};
+
+// const securePassword = async (password) => {
+//   try {
+//     const salt = await bcrypt.genSalt(10);
+//     const hashedPassword = await bcrypt.hash(password, salt);
+//     return hashedPassword;
+//   } catch (error) {
+//     res.status(400).send(error.message);
+//   }
+// };
 
 // @desc    Register new user
 // @route   POST /api/users/register
@@ -27,8 +74,8 @@ const registerUser = asyncHandler(async (req, res) => {
   // Hash password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
-  const picture = "https://i.ibb.co/MBtjqXQ/no-avatar.gif"
-  const idPicProfile = "UserPic_w58kfb"
+  const picture = "https://i.ibb.co/MBtjqXQ/no-avatar.gif";
+  const idPicProfile = "UserPic_w58kfb";
 
   // Create user
   const user = await User.create({
@@ -36,7 +83,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     password: hashedPassword,
     picProfile: picture,
-    idPicProfile: idPicProfile
+    idPicProfile: idPicProfile,
   });
 
   if (user) {
@@ -69,6 +116,7 @@ const loginUser = asyncHandler(async (req, res) => {
       email: user.email,
       picProfile: user.picProfile,
       token: generateToken(user._id),
+      isAdmin: user.isAdmin,
     });
   } else {
     res.status(400);
@@ -81,10 +129,7 @@ const loginUser = asyncHandler(async (req, res) => {
 // @access  Private
 const updateUser = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  const { name, email, password, token } = req.body;
-
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  const { name, email } = req.body;
 
   try {
     let user = await User.findById(id);
@@ -100,14 +145,64 @@ const updateUser = asyncHandler(async (req, res) => {
     const userData = {
       name: name || user.name,
       email: email || user.email,
-      password: hashedPassword || user.password,
       picProfile: picProfile.secure_url || user.picProfile,
       idPicProfile: picProfile.public_id || user.idPicProfile,
     };
     user = await User.findByIdAndUpdate(id, userData, { new: true });
     res.json(user);
   } catch (err) {
-    res.status(400).send(err)
+    res.status(400).send(err);
+  }
+});
+
+const resetPasswordUser = asyncHandler(async (req, res) => {
+  const {password} = req.body
+  try {
+    const token = req.query.token;
+    const tokenData = await User.findOne({ token: token });
+    if (tokenData) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      // const newPassword = await securePassword(password)
+      const userData = await User.findByIdAndUpdate({_id:tokenData._id},{$set:{password: hashedPassword, token: ""}}, {new: true});
+      res
+        .status(200)
+        .send({
+          success: true,
+          message: "User Password has been reset",
+          data: userData,
+        });
+    } else {
+      res
+        .status(200)
+        .send({ success: false, message: "this link has been expired" });
+    }
+  } catch (error) {
+    res.status(400).send({ success: false, message: error.message });
+  }
+});
+
+const forgotPasswordUser = asyncHandler(async (req, res) => {
+  try {
+    const email = req.body.email;
+    const userData = await User.findOne({ email: email });
+
+    if (userData) {
+      const randomString = randomstring.generate();
+      const data = await User.updateOne(
+        { email: email },
+        { $set: { token: randomString } }
+      );
+      sendResetPasswordMail(userData.name, userData.email, randomString);
+      res.status(200).send({
+        success: true,
+        message: "Cek email di inbox",
+      });
+    } else {
+      res.status(200).send({ success: true, message: "Email tidak ditemukan" });
+    }
+  } catch (error) {
+    res.status(400).send({ success: false, message: error.message });
   }
 });
 
@@ -116,17 +211,17 @@ const updateUser = asyncHandler(async (req, res) => {
 // @access  Private
 const deleteUser = asyncHandler(async (req, res) => {
   const id = req.params.id;
-   
-  try{
-    let user = await User.findById(id)
-    await cloudinary.uploader.destroy(user.idPicProfile)
 
-    await user.remove()
-    res.json(user)
-  }catch(err){
+  try {
+    let user = await User.findById(id);
+    await cloudinary.uploader.destroy(user.idPicProfile);
+
+    await user.remove();
+    res.json(user);
+  } catch (err) {
     res.status(400).send(err.message);
   }
-})
+});
 
 // @desc    Get user data
 // @route   GET /api/users/me
@@ -134,7 +229,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 const getMe = asyncHandler(async (req, res) => {
   const id = req.params.id;
 
-  let user = await User.findById(id)
+  let user = await User.findById(id);
 
   if (user) {
     res.json({
@@ -156,7 +251,6 @@ const getAll = asyncHandler(async (req, res) => {
   res.status(200).json(users);
 });
 
-
 // Generate JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -164,11 +258,12 @@ const generateToken = (id) => {
   });
 };
 
-
 module.exports = {
   registerUser,
   loginUser,
   updateUser,
+  resetPasswordUser,
+  forgotPasswordUser,
   deleteUser,
   getMe,
   getAll,

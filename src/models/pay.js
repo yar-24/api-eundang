@@ -11,6 +11,12 @@ const paySchema = mongoose.Schema(
       type: String,
       primaryKey: true,
     },
+    paketUndangan : {
+      type: String
+    },
+    paketHarga : {
+      type: String
+    },
     nama: {
       type: String,
       allowNull: false,

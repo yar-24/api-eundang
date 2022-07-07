@@ -9,6 +9,9 @@ const {
   getAll,
   updateUser,
   deleteUser,
+  // resetPasswordUser,
+  forgotPasswordUser,
+  resetPasswordUser,
 } = require("../controllers/userController");
 const { protect } = require("../middleware/authMiddleware");
 
@@ -19,12 +22,13 @@ router.put(
   [
     body("name"),
     body("email"),
-    body("password"),
     fileUploads.single("picProfile"),
   ], protect,
   updateUser
 );
 router.delete("/:id", protect, deleteUser)
+router.post("/resetPassword", resetPasswordUser)
+router.post("/forgotPassword", forgotPasswordUser)
 router.get("/:id", protect, getMe);
 router.get("/", protect, getAll);
 

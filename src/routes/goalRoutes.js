@@ -56,6 +56,7 @@ router.post(
     // GALERI
     body("idYT"),
     body("linkLive"),
+    body("paketUndangan"),
     fileUploads.fields([
       { name: "photoCowo" },
       { name: "photoCewe" },

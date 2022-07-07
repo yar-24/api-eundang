@@ -9,7 +9,8 @@ const getOrders = asyncHandler(async(req, res, next) => {
         return {
           _id: item._id,
           id: item.id,
-          tiket_id: item.tiket_id,
+          paketUndangan: item.paketUndangan,
+          paketHarga: item.paketHarga,
           nama: item.nama,
           response_midtrans: JSON.parse(item.response_midtrans),
           createdAt: item.createdAt,
@@ -35,7 +36,8 @@ const getOrdersByAdmin = asyncHandler(async(req, res, next) => {
         return {
           _id: item._id,
           id: item.id,
-          tiket_id: item.tiket_id,
+          paketUndangan: item.paketUndangan,
+          paketHarga: item.paketHarga,
           nama: item.nama,
           response_midtrans: JSON.parse(item.response_midtrans),
           createdAt: item.createdAt,
@@ -85,6 +87,8 @@ const postOrder = asyncHandler((req, res, next) => {
       var dataOrder = {
         user: req.user.id,
         id: chargeResponse.order_id,
+        paketUndangan: req.body.paketUndangan,
+        paketHarga: req.body.paketHarga,
         nama: req.body.nama,
         response_midtrans: JSON.stringify(chargeResponse),
       };

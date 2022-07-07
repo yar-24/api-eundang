@@ -94,6 +94,8 @@ const goalPost = asyncHandler(async (req, res) => {
         music: music.secure_url,
         idCloudMusic: music.public_id,
 
+        paketUndangan: req.body.paketUndangan,
+
         // music: req.file["music"].path,
       });
       res.status(201).json(goal);

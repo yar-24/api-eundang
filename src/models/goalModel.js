@@ -69,26 +69,25 @@ const goalSchema = mongoose.Schema(
     },
 
     //DOMPET DIGITAL
-    namaBank: { type: String, required: [true, "Please add a namaBank"] },
-    noRek: { type: String, required: [true, "Please add a noRek"] },
+    namaBank: { type: String },
+    noRek: { type: String},
     atasNamaBank: {
       type: String,
-      required: [true, "Please add a atasNamaBank"],
     },
-    namaDompet: { type: String, required: [true, "Please add a namaDompet"] },
-    noHp: { type: String, required: [true, "Please add a noHp"] },
+    namaDompet: { type: String, },
+    noHp: { type: String },
     atasNamaDompet: {
-      type: String,
-      required: [true, "Please add a atasNamaDompet"],
+      type: String
     },
 
     //GALERI
     idYT: { type: String },
-    linkLive: { type: String, required: [true, "Please add a linkLive"] },
+    linkLive: { type: String },
     photoBerdua: { type: String },
     idCloudPhotoBerdua: {type: String},
     music: { type: String },
     idCloudMusic: {type: String},
+    paketUndangan: {type: String},
     files: [Object],
     comments: [
       {
