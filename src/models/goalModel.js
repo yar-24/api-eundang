@@ -19,7 +19,7 @@ const goalSchema = mongoose.Schema(
     },
     namaIbuCowo: { type: String, required: [true, "Please add a namaIbuCowo"] },
     urutanAnakCowo: {
-      type: String,
+      type: Number,
       required: [true, "Please add a urutanAnakCowo"],
     },
     linkIGCowo: { type: String, required: [true, "Please add a linkIGCowo"] },
@@ -36,7 +36,7 @@ const goalSchema = mongoose.Schema(
     },
     namaIbuCewe: { type: String, required: [true, "Please add a namaIbuCewe"] },
     urutanAnakCewe: {
-      type: String,
+      type: Number,
       required: [true, "Please add a urutanAnakCewe"],
     },
     linkIGCewe: { type: String, required: [true, "Please add a linkIGCewe"] },

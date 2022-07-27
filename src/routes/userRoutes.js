@@ -9,7 +9,6 @@ const {
   getAll,
   updateUser,
   deleteUser,
-  // resetPasswordUser,
   forgotPasswordUser,
   resetPasswordUser,
 } = require("../controllers/userController");

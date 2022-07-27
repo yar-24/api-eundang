@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
-const cloudinary = require("../middleware/cloudinary");
 const nodemailer = require("nodemailer");
+const asyncHandler = require("express-async-handler");
+const cloudinary = require("../middleware/cloudinaryMiddleware");
 const randomstring = require("randomstring");
 
 const sendResetPasswordMail = async (name, email, token) => {
@@ -41,16 +41,6 @@ const sendResetPasswordMail = async (name, email, token) => {
     res.status(400).send({ success: false, message: error.message });
   }
 };
-
-// const securePassword = async (password) => {
-//   try {
-//     const salt = await bcrypt.genSalt(10);
-//     const hashedPassword = await bcrypt.hash(password, salt);
-//     return hashedPassword;
-//   } catch (error) {
-//     res.status(400).send(error.message);
-//   }
-// };
 
 // @desc    Register new user
 // @route   POST /api/users/register

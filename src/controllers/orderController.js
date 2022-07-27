@@ -1,6 +1,6 @@
-const coreApi = require("../middleware/order");
+const coreApi = require("../middleware/orderMiddleware");
+const Pay = require("../models/payModel");
 const asyncHandler = require("express-async-handler");
-const Pay = require("../models/pay");
 
 const getOrders = asyncHandler(async(req, res, next) => {
   Pay.find({ user: req.user.id })

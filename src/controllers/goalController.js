@@ -1,8 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Goal = require("../models/goalModel");
-// const path = require("path");
-// const fs = require("fs");
-const cloudinary = require("../middleware/cloudinary");
+const cloudinary = require("../middleware/cloudinaryMiddleware");
 
 // @desc    Post goals
 // @route   POST /api/goals
