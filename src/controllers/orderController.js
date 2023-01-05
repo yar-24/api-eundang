@@ -1,5 +1,5 @@
 const coreApi = require("../middleware/orderMiddleware");
-const Pay = require("../models/payModel");
+const Pay = require("../models/orderModel");
 const asyncHandler = require("express-async-handler");
 
 const getOrders = asyncHandler(async(req, res, next) => {

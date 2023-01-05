@@ -26,7 +26,7 @@ const sendResetPasswordMail = async (name, email, token) => {
       html:
         "<p> hai " +
         name +
-        ', Please copy or click the <a href="https://eundang.herokuapp.com/resetPassword?token=' +
+        ', Please copy or click the <a href="https://eundang.vercel.app/resetPassword?token=' +
         token +
         '">link</a> and reset your password</p> ',
     };
