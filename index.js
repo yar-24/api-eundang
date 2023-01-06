@@ -40,20 +40,16 @@ app.use(bodyParser.json())
 
 app.use(errorHandler);
 
-// app.use(express.static(path.join(__dirname, "client",)));
-// app.get("/*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "client", "index.html"));
-// });
+//----------------deployment-----------------
+app.use(express.static(path.join(__dirname, "client",)));
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "index.html"));
+});
 
 app.listen(process.env.PORT || 5000, () => {
   console.log("Backend server is running!");
 });
 
-//----------------deployment-----------------
 
-// app.use(express.static(path.join(__dirname, "admin")));
-// app.get("/admin", (req, res) => {
-//   res.sendFile(path.join(__dirname, "admin", "index.html"));
-// });
 
 
