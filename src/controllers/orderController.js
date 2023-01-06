@@ -2,7 +2,7 @@ const coreApi = require("../middleware/orderMiddleware");
 const Pay = require("../models/orderModel");
 const asyncHandler = require("express-async-handler");
 
-const getOrders = asyncHandler(async(req, res, next) => {
+const getOrders = asyncHandler(async(req, res) => {
   Pay.find({ user: req.user.id })
     .then((data) => {
       var tampilData = data.map((item) => {
@@ -28,7 +28,7 @@ const getOrders = asyncHandler(async(req, res, next) => {
     });
 });
 
-const getOrdersByAdmin = asyncHandler(async(req, res, next) => {
+const getOrdersByAdmin = asyncHandler(async(req, res) => {
  
   Pay.find()
     .then((data) => {
