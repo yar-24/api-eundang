@@ -80,38 +80,33 @@ const deleteOrder = asyncHandler((req, res, next) => {
 });
 
 const postOrder = asyncHandler((req, res) => {
-
   coreApi
     .charge(req.body)
-    .then((chargeResponse)=>{
-        console.log('chargeResponse:');
-        console.log(chargeResponse);
+    .then((chargeResponse) => {
+      var dataOrder = {
+        user: req.user.id,
+        id: chargeResponse.order_id,
+        paketUndangan: req.body.paketUndangan,
+        paketHarga: req.body.paketHarga,
+        nama: req.body.nama,
+        response_midtrans: JSON.stringify(chargeResponse),
+      };
+      Pay.create(dataOrder)
+        .then((data) => {
+          res.json({
+            status: true,
+            pesan: "Berhasil Tmbah",
+            data: data,
+          });
+        })
+        .catch((err) => {
+          res.json({
+            status: false,
+            pesan: "Gagal Tambah: " + err.message,
+            data: [],
+          });
+        });
     })
-    // .then((chargeResponse) => {
-    //   var dataOrder = {
-    //     user: req.user.id,
-    //     // id: chargeResponse.order_id,
-    //     paketUndangan: req.body.paketUndangan,
-    //     paketHarga: req.body.paketHarga,
-    //     nama: req.body.nama,
-    //     response_midtrans: JSON.stringify(chargeResponse),
-    //   };
-    //   Pay.create(dataOrder)
-    //     .then((data) => {
-    //       res.json({
-    //         status: true,
-    //         pesan: "Berhasil Tmbah",
-    //         data: data,
-    //       });
-    //     })
-    //     .catch((err) => {
-    //       res.json({
-    //         status: false,
-    //         pesan: "Gagal Tambah: " + err.message,
-    //         data: [],
-    //       });
-    //     });
-    // })
     .catch((e) => {
       res.json({
         status: false,
