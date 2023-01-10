@@ -2,7 +2,7 @@ const coreApi = require("../middleware/orderMiddleware");
 const Pay = require("../models/orderModel");
 const asyncHandler = require("express-async-handler");
 
-const getOrders = asyncHandler(async(req, res) => {
+const getOrders = asyncHandler(async (req, res) => {
   Pay.find({ user: req.user.id })
     .then((data) => {
       var tampilData = data.map((item) => {
@@ -28,8 +28,7 @@ const getOrders = asyncHandler(async(req, res) => {
     });
 });
 
-const getOrdersByAdmin = asyncHandler(async(req, res) => {
- 
+const getOrdersByAdmin = asyncHandler(async (req, res) => {
   Pay.find()
     .then((data) => {
       var tampilData = data.map((item) => {
@@ -59,7 +58,7 @@ const deleteOrder = asyncHandler((req, res, next) => {
   const id = req.params.order_id;
 
   Pay.findById(id)
-    .then((data) => { 
+    .then((data) => {
       if (!data) {
         const err = new Error("Undangan tidak ditemukan");
         err.errorStatus = 404;
@@ -69,7 +68,7 @@ const deleteOrder = asyncHandler((req, res, next) => {
         message: "Order Berhasil dihapus",
         data: data,
       });
-      return Pay.findByIdAndRemove(id)
+      return Pay.findByIdAndRemove(id);
     })
     .catch((err) => {
       res.json({
@@ -78,40 +77,45 @@ const deleteOrder = asyncHandler((req, res, next) => {
         data: [],
       });
     });
-})
+});
 
-const postOrder = asyncHandler((req, res, next) => {
+const postOrder = asyncHandler((req, res) => {
+
   coreApi
     .charge(req.body)
-    .then((chargeResponse) => {
-      var dataOrder = {
-        user: req.user.id,
-        id: chargeResponse.order_id,
-        paketUndangan: req.body.paketUndangan,
-        paketHarga: req.body.paketHarga,
-        nama: req.body.nama,
-        response_midtrans: JSON.stringify(chargeResponse),
-      };
-      Pay.create(dataOrder)
-        .then((data) => {
-          res.json({
-            status: true,
-            pesan: "Berhasil Order",
-            data: data,
-          });
-        })
-        .catch((err) => {
-          res.json({
-            status: false,
-            pesan: "Gagal Order: " + err.message,
-            data: [],
-          });
-        });
+    .then((chargeResponse)=>{
+        console.log('chargeResponse:');
+        console.log(chargeResponse);
     })
+    // .then((chargeResponse) => {
+    //   var dataOrder = {
+    //     user: req.user.id,
+    //     // id: chargeResponse.order_id,
+    //     paketUndangan: req.body.paketUndangan,
+    //     paketHarga: req.body.paketHarga,
+    //     nama: req.body.nama,
+    //     response_midtrans: JSON.stringify(chargeResponse),
+    //   };
+    //   Pay.create(dataOrder)
+    //     .then((data) => {
+    //       res.json({
+    //         status: true,
+    //         pesan: "Berhasil Tmbah",
+    //         data: data,
+    //       });
+    //     })
+    //     .catch((err) => {
+    //       res.json({
+    //         status: false,
+    //         pesan: "Gagal Tambah: " + err.message,
+    //         data: [],
+    //       });
+    //     });
+    // })
     .catch((e) => {
       res.json({
         status: false,
-        pesan: "Gagal order: " + e.message,
+        pesan: "Gagal Order: " + e.message,
         data: [],
       });
     });
