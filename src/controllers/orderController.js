@@ -85,7 +85,7 @@ const postOrder = asyncHandler((req, res) => {
     .then((chargeResponse) => {
       var dataOrder = {
         user: req.user.id,
-        id: chargeResponse.order_id,
+        // id: chargeResponse.order_id,
         paketUndangan: req.body.paketUndangan,
         paketHarga: req.body.paketHarga,
         nama: req.body.nama,
