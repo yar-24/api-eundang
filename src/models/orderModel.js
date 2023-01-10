@@ -7,10 +7,10 @@ const paySchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
-    id: {
-      type: String,
-      primaryKey: true,
-    },
+    // id: {
+    //   type: String,
+    //   primaryKey: true,
+    // },
     paketUndangan : {
       type: String
     },
